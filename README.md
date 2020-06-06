@@ -1,10 +1,11 @@
 # Smush Discord
 
-A Skyline plugin that hosts a TCP server for subscribing to information about the current Smash Ultimate match and corresponding client for adding Discord Rich Presence using some of the information.
+A client for the `smush_info` Skyline plugin to provide real-time Discord Rich Presence for Smash Ultimate.
 
-Authors:
-* jam1garner
-* jugeeya
+![](https://cdn.discordapp.com/attachments/699809178658668615/718708103033389107/unknown.png)
 
-Thanks to:
-* @dul_jab - adding human readable names
+# Usage
+
+1. Put your switch's ip in `%HOME%/.switch/ip_addr.txt`
+2. Start up smash
+3. Run the client on a computer with discord open

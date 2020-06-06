@@ -1,25 +1,13 @@
 [package]
-name = "discord_server"
+name = "smush_discord_client"
 version = "0.1.0"
-authors = ["jam1garner <jam1.mcleod@hotmail.com>"]
+authors = ["jam1garner <8260240+jam1garner@users.noreply.github.com>"]
 edition = "2018"
 
-[package.metadata.skyline]
-titleid = "01006A800016E000"
-
-[lib]
-crate-type = ["cdylib"]
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-skyline = { git = "https://github.com/ultimate-research/skyline-rs.git" }
-skyline_smash = { git = "https://github.com/ultimate-research/skyline-smash.git" }
-smush_discord_shared = { path = "./shared" }
+smush_discord_shared = { git = "https://github.com/jam1garner/smush_info_shared" }
 serde_json = "1"
-lazy_static = "1.4"
-
-[profile.dev]
-panic = "abort"
-
-[profile.release]
-panic = "abort"
-lto = true
+dirs = "2"
+rustcord = { git = "https://github.com/tcyrus/rustcord.git", branch = "patch-1" }
