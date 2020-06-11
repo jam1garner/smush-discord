@@ -3,6 +3,7 @@ use std::net::{TcpStream, IpAddr};
 use std::io::{BufRead, BufReader};
 use rustcord::{Rustcord, EventHandlers, User, RichPresenceBuilder, RichPresence};
 use std::time::{Duration, SystemTime};
+use std::thread;
 
 pub struct Handlers;
 
@@ -80,10 +81,21 @@ fn info_to_presence(info: &Info) -> RichPresence {
 }
 
 fn main() {
-    let packets = BufReader::new(TcpStream::connect((get_home_ip(), 4242u16)).unwrap()).split(b'\n');
+    
+    let stream = loop{
+        match TcpStream::connect((get_home_ip(), 4242u16)){
+            Ok(s) => break s,
+            Err(_err) => {
+                println!("Error! Could not connect to the switch!");
+                thread::sleep(std::time::Duration::from_secs(5));
+            }
+        };
+    };
+
+
+    let packets = BufReader::new(stream).split(b'\n');
 
     let discord = Rustcord::init::<Handlers>("718317785016565790", true, None).unwrap();
-
 
     for packet in packets {
         let info = get_info(&packet.unwrap());
