@@ -85,7 +85,11 @@ fn info_to_presence(info: &Info) -> RichPresence {
     };
 
     let builder = if let Some(id) = info.arena_id() {
-        builder.join_secret(&id).party_id(&format!("ult-arena-{}", id))
+        builder
+            .join_secret(&id)
+            .party_id(&format!("ult-arena-{}", id))
+            .party_size(1)
+            .party_max(4)
     } else {
         builder
     };
