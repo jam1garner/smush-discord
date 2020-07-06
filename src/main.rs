@@ -3,12 +3,19 @@ use std::net::{TcpStream, IpAddr};
 use std::io::{BufRead, BufReader};
 use rustcord::{Rustcord, EventHandlers, User, RichPresenceBuilder, RichPresence};
 use std::time::{Duration, SystemTime};
+use std::io::prelude::*;
 
 pub struct Handlers;
 
 impl EventHandlers for Handlers {
     fn ready(user: User) {
         println!("User {}#{} logged in...", user.username, user.discriminator);
+    }
+
+    fn join_game(secret: &str) {
+        let ip = get_home_ip();
+        let mut stream = TcpStream::connect((ip, 4243)).unwrap();
+        stream.write(&secret.as_bytes()[..5]).unwrap();
     }
 }
 
@@ -50,7 +57,7 @@ fn stage_to_image_key(stage: Stage) -> String {
 }
 
 fn info_to_presence(info: &Info) -> RichPresence {
-    if info.is_match() {
+    let builder = if info.is_match() {
         RichPresenceBuilder::new()
             .state("In Match")
             .details(
@@ -70,20 +77,25 @@ fn info_to_presence(info: &Info) -> RichPresence {
                         (info.remaining_frames() as f64) / 60.0
                     )
             )
-            .build()
     } else {
         RichPresenceBuilder::new()
             .state("In Menus")
             .large_image_key("smash_ball")
-            .build()
-    }
+    };
+
+    let builder = if let Some(id) = info.arena_id() {
+        builder.join_secret(&id).party_id(&format!("ult-arena-{}", id))
+    } else {
+        builder
+    };
+
+    builder.build()
 }
 
 fn main() {
     let packets = BufReader::new(TcpStream::connect((get_home_ip(), 4242u16)).unwrap()).split(b'\n');
 
     let discord = Rustcord::init::<Handlers>("718317785016565790", true, None).unwrap();
-
 
     for packet in packets {
         let info = get_info(&packet.unwrap());
