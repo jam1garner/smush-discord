@@ -1,4 +1,4 @@
-use smush_discord_shared::{Info, Stage};
+use smush_info_shared::{Info, Stage};
 use std::net::{TcpStream, IpAddr};
 use std::io::{BufRead, BufReader};
 use rustcord::{Rustcord, EventHandlers, User, RichPresenceBuilder, RichPresence};
@@ -98,7 +98,7 @@ fn info_to_presence(info: &Info) -> RichPresence {
 }
 
 fn main() {
-    
+
     let stream = loop{
         match TcpStream::connect((get_home_ip(), 4242u16)){
             Ok(s) => break s,
